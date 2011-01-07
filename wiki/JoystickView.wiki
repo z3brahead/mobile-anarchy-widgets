@@ -1,6 +1,7 @@
 #labels Featured
 == JoystickView Widget ==
 
-this widget simulate an on-screen joystick functionality. This is an early release, and does not expose a customization interface yet.
+This widget simulate an on-screen joystick functionality. 
+This is an early release, and does not expose a customization interface yet.
 
 <wiki:video url="http://www.youtube.com/watch?v=MYehFrsiCcg"/>
