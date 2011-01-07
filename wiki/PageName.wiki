@@ -1,0 +1,17 @@
+#summary One-sentence summary of this page.
+
+= Introduction =
+
+This project will host a collection of views/widgets/controls that I needed for my android projects, but I couldn't find them build into the framework.
+I hope, that in time, more widgets will be added to this project.
+
+
+= Current Widgets =
+
+  * *ThreasholdEditText* - same as the "standard" EditText, but with a new _OnThresholdTextChanged_ event added to the view that will be fired after a specific (configurable) delay from the last received input.
+  * *DockPanel* - retractable panel that can be docked to any one of the screen sides. A custom button will allow the hiding and revealing of the panel.
+
+
+= Contribution = 
+
+If you want to contribute by improving the existing widgets, or adding one of your own to the project, please contact me at: admin /at/ mobileanarchy.com
