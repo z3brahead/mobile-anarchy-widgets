@@ -5,8 +5,6 @@ This widget is a retractable panel that can be docked to any one of the screen s
 
 The button and the panel's content is fully customizable using code or xml markup.
 
-<wiki:video url="http://www.youtube.com/watch?v=NARZmoyZypk"/>
-
 xml markup usage:
 
 {{{
@@ -19,3 +17,8 @@ xml markup usage:
       mobileanarchy:contentLayoutId="@layout/dockpanel_vertical_content"
       mobileanarchy:animationDuration="1000" /> 
 }}}
+
+
+<wiki:video url="http://www.youtube.com/watch?v=NARZmoyZypk"/>
+
+<wiki:video url="http://www.youtube.com/watch?v=ypvSdr_fwfE"/>
