@@ -1,5 +1,5 @@
 #labels Featured
-== DockPanelt Widget ==
+== DockPanel Widget ==
 
 This widget is a retractable panel that can be docked to any one of the screen sides. A custom button will allow the hiding and revealing of the panel.
 
