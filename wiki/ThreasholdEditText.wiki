@@ -1,3 +1,4 @@
+#labels Featured
 == ThreasholdEditText Widget ==
 
 A new OnThresholdTextChanged event was added to the view that will be fired after a specific (configurable) delay from the last received input on that EditText view.
