@@ -13,12 +13,13 @@ public class ThresholdEditText extends EditText {
 	// Private members
 	// =========================================
 
-	private int threshold;
-	private ThresholdTextChanged thresholdTextChanged;
-	private Handler handler;
-	private Runnable invoker;
-	private boolean disableThresholdOnEmptyInput;
+	private int _threshold;
+	private ThresholdTextChanged _thresholdTextChanged;
+	private Handler _handler;
+	private Runnable _invoker;
+	private boolean _thresholdDisabledOnEmptyInput;
 
+	
 	// =========================================
 	// Constructors
 	// =========================================
@@ -35,6 +36,7 @@ public class ThresholdEditText extends EditText {
 		init();
 	}
 
+	
 	// =========================================
 	// Public properties
 	// =========================================
@@ -43,7 +45,7 @@ public class ThresholdEditText extends EditText {
 	 * Get the current threshold value
 	 */
 	public int getThreshold() {
-		return threshold;
+		return _threshold;
 	}
 
 	/**
@@ -53,7 +55,7 @@ public class ThresholdEditText extends EditText {
 	 *            Threshold value
 	 */
 	public void setThreshold(int threshold) {
-		this.threshold = threshold;
+		this._threshold = threshold;
 	}
 
 	/**
@@ -61,18 +63,18 @@ public class ThresholdEditText extends EditText {
 	 *         EditText is emptied False = The threshold will be used even on
 	 *         empty input
 	 */
-	public boolean isDisableThresholdOnEmptyInput() {
-		return disableThresholdOnEmptyInput;
+	public boolean getThresholdDisabledOnEmptyInput() {
+		return _thresholdDisabledOnEmptyInput;
 	}
 
 	/**
-	 * @param disableThresholdOnEmptyInput
+	 * @param thresholdDisabledOnEmptyInput
 	 *            Set to true if you want the callback to fire immediately when
 	 *            the content of the EditText is emptied
 	 */
-	public void setDisableThresholdOnEmptyInput(
-			boolean disableThresholdOnEmptyInput) {
-		this.disableThresholdOnEmptyInput = disableThresholdOnEmptyInput;
+	public void setThresholdDisabledOnEmptyInput(
+			boolean thresholdDisabledOnEmptyInput) {
+		this._thresholdDisabledOnEmptyInput = thresholdDisabledOnEmptyInput;
 	}
 
 	/**
@@ -81,7 +83,7 @@ public class ThresholdEditText extends EditText {
 	 * @param listener
 	 */
 	public void setOnThresholdTextChanged(ThresholdTextChanged listener) {
-		this.thresholdTextChanged = listener;
+		this._thresholdTextChanged = listener;
 	}
 
 	// =========================================
@@ -93,21 +95,19 @@ public class ThresholdEditText extends EditText {
 	 */
 	private void initAttributes(AttributeSet attrs) {
 		if (attrs != null) {
-			String namespace = "http://schemas.android.com/apk/res/com.MobileAnarchy.ThresholdEditText";
+			String namespace = "http://com.MobileAnarchy.Android.Widgets";
 
 			// Load values to local members
-			this.threshold = attrs.getAttributeIntValue(namespace, "threshold",
+			this._threshold = attrs.getAttributeIntValue(namespace, "threshold",
 					500);
-			;
-			this.disableThresholdOnEmptyInput = attrs.getAttributeBooleanValue(
+			this._thresholdDisabledOnEmptyInput = attrs.getAttributeBooleanValue(
 					namespace, "disableThresholdOnEmptyInput", true);
-			;
 		} else {
 			// Default threshold value is 0.5 seconds
-			threshold = 500;
+			_threshold = 500;
 
 			// Default behaviour on emptied text - no threshold
-			disableThresholdOnEmptyInput = true;
+			_thresholdDisabledOnEmptyInput = true;
 		}
 	}
 
@@ -116,9 +116,9 @@ public class ThresholdEditText extends EditText {
 	 */
 	private void init() {
 
-		handler = new Handler();
+		_handler = new Handler();
 
-		invoker = new Runnable() {
+		_invoker = new Runnable() {
 
 			@Override
 			public void run() {
@@ -143,14 +143,14 @@ public class ThresholdEditText extends EditText {
 					int count) {
 
 				// Remove any existing pending callbacks
-				handler.removeCallbacks(invoker);
+				_handler.removeCallbacks(_invoker);
 
-				if (s.length() == 0 && disableThresholdOnEmptyInput) {
+				if (s.length() == 0 && _thresholdDisabledOnEmptyInput) {
 					// The text is empty, so invoke the callback immediately
-					invoker.run();
+					_invoker.run();
 				} else {
 					// Post a new delayed callback
-					handler.postDelayed(invoker, threshold);
+					_handler.postDelayed(_invoker, _threshold);
 				}
 			}
 
@@ -161,8 +161,8 @@ public class ThresholdEditText extends EditText {
 	 * Invoking the callback on the listener provided (if provided)
 	 */
 	private void invokeCallback() {
-		if (thresholdTextChanged != null) {
-			thresholdTextChanged.onThersholdTextChanged(this.getText());
+		if (_thresholdTextChanged != null) {
+			_thresholdTextChanged.onThersholdTextChanged(this.getText());
 		}
 	}
 

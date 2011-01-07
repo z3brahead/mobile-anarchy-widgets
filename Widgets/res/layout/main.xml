@@ -1,29 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
- 	xmlns:ma="http://com.MobileAnarchy.Android.Widgets"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#333">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
 
-	<LinearLayout android:id="@+id/LinearLayout" android:layout_width="fill_parent" android:layout_height="fill_parent" android:orientation="vertical" android:gravity="center">
-			<!-- Activity Content -->
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:padding="20dip">
+
+		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/select_widget" android:textSize="20dip" android:typeface="monospace" android:layout_marginBottom="10dip"></TextView>
+		<Button android:id="@+id/ButtonThreasholdEditText" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/threasholdedittext"></Button>
+		<Button android:id="@+id/ButtonDockPanelHorizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/dockpanel_horizontal"></Button>
+		<Button android:id="@+id/ButtonDockPanelVertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/dockpanel_vertical"></Button>
+		<Button android:id="@+id/ButtonJoystick" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/joystick"></Button>
+
 	</LinearLayout>
 
-	<com.MobileAnarchy.Android.Widgets.DockPanel.DockPanel
-		android:layout_width="wrap_content"
-	    android:layout_height="fill_parent"
-	    android:layout_gravity="right"
-	    ma:dockPosition="right"
-	    ma:handleButtonDrawableResourceId="@drawable/right_dock_handle"
-	    ma:contentLayoutId="@layout/dockpanel_vertical_content"
-	    ma:animationDuration="1000" /> 
-	
-	<com.MobileAnarchy.Android.Widgets.DockPanel.DockPanel
-		android:layout_width="wrap_content"
-	    android:layout_height="fill_parent"
-	    android:layout_gravity="left"
-	    ma:dockPosition="left"
-	    ma:contentLayoutId="@layout/dockpanel_vertical_content"
-	    ma:handleButtonDrawableResourceId="@drawable/left_dock_handle" /> 
-
-</FrameLayout>
+</ScrollView>
