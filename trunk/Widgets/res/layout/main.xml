@@ -10,6 +10,8 @@
 		<Button android:id="@+id/ButtonDockPanelHorizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/dockpanel_horizontal"></Button>
 		<Button android:id="@+id/ButtonDockPanelVertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/dockpanel_vertical"></Button>
 		<Button android:id="@+id/ButtonJoystick" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/joystick"></Button>
+		<Button android:id="@+id/ButtonTilesLayout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/tileslayout"></Button>
+		<Button android:id="@+id/ButtonSortableList" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/sortablelist"></Button>
 
 	</LinearLayout>
 

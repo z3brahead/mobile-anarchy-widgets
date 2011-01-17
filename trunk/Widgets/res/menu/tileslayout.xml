@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/menu_item1by1" android:title="1X1"></item>
+	<item android:id="@+id/menu_item2by2" android:title="2X2"></item>
+	<item android:id="@+id/menu_item3by3" android:title="3X3"></item>
+	<item android:id="@+id/menu_item2by3" android:title="2X3"></item>
+	<item android:id="@+id/menu_item3by2" android:title="3X2"></item>
+	<item android:id="@+id/menu_item4by4" android:title="4X4"></item>
+	<item android:id="@+id/menu_item2by3by3" android:title="2X3X3"></item>
+</menu>

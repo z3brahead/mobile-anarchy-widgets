@@ -17,9 +17,11 @@ public class MainActivity extends Activity {
 		openActivity(R.id.ButtonDockPanelHorizontal, DockPanelHorizontalActivity.class);
 		openActivity(R.id.ButtonDockPanelVertical, DockPanelVerticalActivity.class);
 		openActivity(R.id.ButtonJoystick, JoystickActivity.class);
+		openActivity(R.id.ButtonTilesLayout, TilesLayoutActivity.class);
+		openActivity(R.id.ButtonSortableList, SortableListActivity.class);
 	}
 	
-	private void openActivity(int buttonId, final Class activityClass) {
+	private void openActivity(int buttonId, final Class<?> activityClass) {
 		findViewById(buttonId).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

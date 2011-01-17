@@ -5,16 +5,19 @@
       android:versionName="1.0">
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name=".MainActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-	    <activity android:name=".ThresholdEditTextActivity"></activity>
-	    <activity android:name=".DockPanelHorizontalActivity"></activity>
-		<activity android:name=".DockPanelVerticalActivity"></activity>
-		<activity android:name=".JoystickActivity"></activity>
+	    <activity android:name=".ThresholdEditTextActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+	    <activity android:name=".DockPanelHorizontalActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+		<activity android:name=".DockPanelVerticalActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+		<activity android:name=".JoystickActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+		<activity android:name=".TilesLayoutActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
+		<activity android:name=".SortableListActivity" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
 	</application>
     <uses-sdk android:minSdkVersion="4" />
 </manifest> 
