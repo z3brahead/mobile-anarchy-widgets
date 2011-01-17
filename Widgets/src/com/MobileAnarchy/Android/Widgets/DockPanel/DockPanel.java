@@ -23,14 +23,14 @@ public class DockPanel extends LinearLayout {
 	// =========================================
 
 	private static final String TAG = "DockPanel";
-	private DockPosition _position;
-	private int _contentLayoutId;
-	private int _handleButtonDrawableId;
-	private Boolean _isOpen;
-	private Boolean _animationRunning;
-	private FrameLayout _contentPlaceHolder;
-	private ImageButton _toggleButton;
-	private int _animationDuration;
+	private DockPosition position;
+	private int contentLayoutId;
+	private int handleButtonDrawableId;
+	private Boolean isOpen;
+	private Boolean animationRunning;
+	private FrameLayout contentPlaceHolder;
+	private ImageButton toggleButton;
+	private int animationDuration;
 
 	// =========================================
 	// Constructors
@@ -40,9 +40,9 @@ public class DockPanel extends LinearLayout {
 			int handleButtonDrawableId, Boolean isOpen) {
 		super(context);
 
-		_contentLayoutId = contentLayoutId;
-		_handleButtonDrawableId = handleButtonDrawableId;
-		_isOpen = isOpen;
+		this.contentLayoutId = contentLayoutId;
+		this.handleButtonDrawableId = handleButtonDrawableId;
+		this.isOpen = isOpen;
 
 		Init(null);
 	}
@@ -68,71 +68,71 @@ public class DockPanel extends LinearLayout {
 
 		// create the handle container
 		FrameLayout handleContainer = new FrameLayout(getContext());
-		handleContainer.addView(_toggleButton);
+		handleContainer.addView(toggleButton);
 
 		// create and populate the panel's container, and inflate it
-		_contentPlaceHolder = new FrameLayout(getContext());
+		contentPlaceHolder = new FrameLayout(getContext());
 		String infService = Context.LAYOUT_INFLATER_SERVICE;
 		LayoutInflater li = (LayoutInflater) getContext().getSystemService(
 				infService);
-		li.inflate(_contentLayoutId, _contentPlaceHolder, true);
+		li.inflate(contentLayoutId, contentPlaceHolder, true);
 
 		// setting the layout of the panel parameters according to the docking
 		// position
-		if (_position == DockPosition.LEFT || _position == DockPosition.RIGHT) {
+		if (position == DockPosition.LEFT || position == DockPosition.RIGHT) {
 			handleContainer.setLayoutParams(new LayoutParams(
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 					android.view.ViewGroup.LayoutParams.FILL_PARENT, 1));
-			_contentPlaceHolder.setLayoutParams(new LayoutParams(
+			contentPlaceHolder.setLayoutParams(new LayoutParams(
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 					android.view.ViewGroup.LayoutParams.FILL_PARENT, 1));
 		} else {
 			handleContainer.setLayoutParams(new LayoutParams(
 					android.view.ViewGroup.LayoutParams.FILL_PARENT,
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-			_contentPlaceHolder.setLayoutParams(new LayoutParams(
+			contentPlaceHolder.setLayoutParams(new LayoutParams(
 					android.view.ViewGroup.LayoutParams.FILL_PARENT,
 					android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 1));
 		}
 
 		// adding the view to the parent layout according to docking position
-		if (_position == DockPosition.RIGHT || _position == DockPosition.BOTTOM) {
+		if (position == DockPosition.RIGHT || position == DockPosition.BOTTOM) {
 			this.addView(handleContainer);
-			this.addView(_contentPlaceHolder);
+			this.addView(contentPlaceHolder);
 		} else {
-			this.addView(_contentPlaceHolder);
+			this.addView(contentPlaceHolder);
 			this.addView(handleContainer);
 		}
 
-		if (!_isOpen) {
-			_contentPlaceHolder.setVisibility(GONE);
+		if (!isOpen) {
+			contentPlaceHolder.setVisibility(GONE);
 		}
 	}
 
 	private void setDefaultValues(AttributeSet attrs) {
 		// set default values
-		_isOpen = true;
-		_animationRunning = false;
-		_animationDuration = 500;
+		isOpen = true;
+		animationRunning = false;
+		animationDuration = 500;
 		setPosition(DockPosition.RIGHT);
 
 		// Try to load values set by xml markup
 		if (attrs != null) {
 			String namespace = "http://com.MobileAnarchy.Android.Widgets";
 
-			_animationDuration = attrs.getAttributeIntValue(namespace,
+			animationDuration = attrs.getAttributeIntValue(namespace,
 					"animationDuration", 500);
-			_contentLayoutId = attrs.getAttributeResourceValue(namespace,
+			contentLayoutId = attrs.getAttributeResourceValue(namespace,
 					"contentLayoutId", 0);
-			_handleButtonDrawableId = attrs.getAttributeResourceValue(
+			handleButtonDrawableId = attrs.getAttributeResourceValue(
 					namespace, "handleButtonDrawableResourceId", 0);
-			_isOpen = attrs.getAttributeBooleanValue(namespace, "isOpen", true);
+			isOpen = attrs.getAttributeBooleanValue(namespace, "isOpen", true);
 
 			// Enums are a bit trickier (needs to be parsed)
 			try {
-				_position = DockPosition.valueOf(attrs.getAttributeValue(
+				position = DockPosition.valueOf(attrs.getAttributeValue(
 						namespace, "dockPosition").toUpperCase());
-				setPosition(_position);
+				setPosition(position);
 			} catch (Exception ex) {
 				// Docking to the left is the default behavior
 				setPosition(DockPosition.LEFT);
@@ -141,15 +141,15 @@ public class DockPanel extends LinearLayout {
 	}
 
 	private void createHandleToggleButton() {
-		_toggleButton = new ImageButton(getContext());
-		_toggleButton.setPadding(0, 0, 0, 0);
-		_toggleButton.setLayoutParams(new FrameLayout.LayoutParams(
+		toggleButton = new ImageButton(getContext());
+		toggleButton.setPadding(0, 0, 0, 0);
+		toggleButton.setLayoutParams(new FrameLayout.LayoutParams(
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
 				Gravity.CENTER));
-		_toggleButton.setBackgroundColor(Color.TRANSPARENT);
-		_toggleButton.setImageResource(_handleButtonDrawableId);
-		_toggleButton.setOnClickListener(new OnClickListener() {
+		toggleButton.setBackgroundColor(Color.TRANSPARENT);
+		toggleButton.setImageResource(handleButtonDrawableId);
+		toggleButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				toggle();
@@ -158,7 +158,7 @@ public class DockPanel extends LinearLayout {
 	}
 
 	private void setPosition(DockPosition position) {
-		_position = position;
+		this.position = position;
 		switch (position) {
 		case TOP:
 			setOrientation(LinearLayout.VERTICAL);
@@ -184,42 +184,42 @@ public class DockPanel extends LinearLayout {
 	// =========================================
 
 	public int getAnimationDuration() {
-		return _animationDuration;
+		return animationDuration;
 	}
 
 	public void setAnimationDuration(int milliseconds) {
-		_animationDuration = milliseconds;
+		animationDuration = milliseconds;
 	}
 
 	public Boolean getIsRunning() {
-		return _animationRunning;
+		return animationRunning;
 	}
 
 	public void open() {
-		if (!_animationRunning) {
+		if (!animationRunning) {
 			Log.d(TAG, "Opening...");
 
 			Animation animation = createShowAnimation();
 			this.setAnimation(animation);
 			animation.start();
 
-			_isOpen = true;
+			isOpen = true;
 		}
 	}
 
 	public void close() {
-		if (!_animationRunning) {
+		if (!animationRunning) {
 			Log.d(TAG, "Closing...");
 
 			Animation animation = createHideAnimation();
 			this.setAnimation(animation);
 			animation.start();
-			_isOpen = false;
+			isOpen = false;
 		}
 	}
 
 	public void toggle() {
-		if (_isOpen) {
+		if (isOpen) {
 			close();
 		} else {
 			open();
@@ -232,31 +232,31 @@ public class DockPanel extends LinearLayout {
 
 	private Animation createHideAnimation() {
 		Animation animation = null;
-		switch (_position) {
+		switch (position) {
 		case TOP:
-			animation = new TranslateAnimation(0, 0, 0, -_contentPlaceHolder
+			animation = new TranslateAnimation(0, 0, 0, -contentPlaceHolder
 					.getHeight());
 			break;
 		case RIGHT:
-			animation = new TranslateAnimation(0, _contentPlaceHolder
+			animation = new TranslateAnimation(0, contentPlaceHolder
 					.getWidth(), 0, 0);
 			break;
 		case BOTTOM:
-			animation = new TranslateAnimation(0, 0, 0, _contentPlaceHolder
+			animation = new TranslateAnimation(0, 0, 0, contentPlaceHolder
 					.getHeight());
 			break;
 		case LEFT:
-			animation = new TranslateAnimation(0, -_contentPlaceHolder
+			animation = new TranslateAnimation(0, -contentPlaceHolder
 					.getWidth(), 0, 0);
 			break;
 		}
 
-		animation.setDuration(_animationDuration);
+		animation.setDuration(animationDuration);
 		animation.setInterpolator(new AccelerateInterpolator());
 		animation.setAnimationListener(new AnimationListener() {
 			@Override
 			public void onAnimationStart(Animation animation) {
-				_animationRunning = true;
+				animationRunning = true;
 			}
 
 			@Override
@@ -265,8 +265,8 @@ public class DockPanel extends LinearLayout {
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				_contentPlaceHolder.setVisibility(View.GONE);
-				_animationRunning = false;
+				contentPlaceHolder.setVisibility(View.GONE);
+				animationRunning = false;
 			}
 		});
 		return animation;
@@ -274,32 +274,32 @@ public class DockPanel extends LinearLayout {
 
 	private Animation createShowAnimation() {
 		Animation animation = null;
-		switch (_position) {
+		switch (position) {
 		case TOP:
-			animation = new TranslateAnimation(0, 0, -_contentPlaceHolder
+			animation = new TranslateAnimation(0, 0, -contentPlaceHolder
 					.getHeight(), 0);
 			break;
 		case RIGHT:
-			animation = new TranslateAnimation(_contentPlaceHolder.getWidth(),
+			animation = new TranslateAnimation(contentPlaceHolder.getWidth(),
 					0, 0, 0);
 			break;
 		case BOTTOM:
-			animation = new TranslateAnimation(0, 0, _contentPlaceHolder
+			animation = new TranslateAnimation(0, 0, contentPlaceHolder
 					.getHeight(), 0);
 			break;
 		case LEFT:
-			animation = new TranslateAnimation(-_contentPlaceHolder.getWidth(),
+			animation = new TranslateAnimation(-contentPlaceHolder.getWidth(),
 					0, 0, 0);
 			break;
 		}
-		Log.d(TAG, "Animation duration: " + _animationDuration);
-		animation.setDuration(_animationDuration);
+		Log.d(TAG, "Animation duration: " + animationDuration);
+		animation.setDuration(animationDuration);
 		animation.setInterpolator(new DecelerateInterpolator());
 		animation.setAnimationListener(new AnimationListener() {
 			@Override
 			public void onAnimationStart(Animation animation) {
-				_animationRunning = true;
-				_contentPlaceHolder.setVisibility(View.VISIBLE);
+				animationRunning = true;
+				contentPlaceHolder.setVisibility(View.VISIBLE);
 				Log.d(TAG, "\"Show\" Animation started");
 			}
 
@@ -309,7 +309,7 @@ public class DockPanel extends LinearLayout {
 
 			@Override
 			public void onAnimationEnd(Animation animation) {
-				_animationRunning = false;
+				animationRunning = false;
 				Log.d(TAG, "\"Show\" Animation ended");
 			}
 		});

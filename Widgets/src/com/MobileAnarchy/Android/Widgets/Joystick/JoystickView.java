@@ -17,14 +17,14 @@ public class JoystickView extends View {
 	// =========================================
 
 	private final String TAG = "JoystickView";
-	private Paint _circlePaint;
-	private Paint _handlePaint;
-	private double _touchX, _touchY;
-	private int _innerPadding;
-	private int _handleRadius;
-	private int _handleInnerBoundaries;
-	private JoystickMovedListener _listener;
-	private int _sensitivity;
+	private Paint circlePaint;
+	private Paint handlePaint;
+	private double touchX, touchY;
+	private int innerPadding;
+	private int handleRadius;
+	private int handleInnerBoundaries;
+	private JoystickMovedListener listener;
+	private int sensitivity;
 
 	// =========================================
 	// Constructors
@@ -52,18 +52,18 @@ public class JoystickView extends View {
 	private void initJoystickView() {
 		setFocusable(true);
 
-		_circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		_circlePaint.setColor(Color.GRAY);
-		_circlePaint.setStrokeWidth(1);
-		_circlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		circlePaint.setColor(Color.GRAY);
+		circlePaint.setStrokeWidth(1);
+		circlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-		_handlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		_handlePaint.setColor(Color.DKGRAY);
-		_handlePaint.setStrokeWidth(1);
-		_handlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		handlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		handlePaint.setColor(Color.DKGRAY);
+		handlePaint.setStrokeWidth(1);
+		handlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
-		_innerPadding = 10;
-		_sensitivity = 10;
+		innerPadding = 10;
+		sensitivity = 10;
 	}
 
 	// =========================================
@@ -71,7 +71,7 @@ public class JoystickView extends View {
 	// =========================================
 
 	public void setOnJostickMovedListener(JoystickMovedListener listener) {
-		this._listener = listener;
+		this.listener = listener;
 	}
 	
 	// =========================================
@@ -85,8 +85,8 @@ public class JoystickView extends View {
 		int measuredHeight = measure(heightMeasureSpec);
 		int d = Math.min(measuredWidth, measuredHeight);
 
-		_handleRadius = (int)(d * 0.25);
-		_handleInnerBoundaries = _handleRadius;
+		handleRadius = (int)(d * 0.25);
+		handleInnerBoundaries = handleRadius;
 		
 		setMeasuredDimension(d, d);
 	}
@@ -114,11 +114,11 @@ public class JoystickView extends View {
 		int radius = Math.min(px, py);
 
 		// Draw the background
-		canvas.drawCircle(px, py, radius - _innerPadding, _circlePaint);
+		canvas.drawCircle(px, py, radius - innerPadding, circlePaint);
 
 		// Draw the handle
-		canvas.drawCircle((int) _touchX + px, (int) _touchY + py, _handleRadius,
-				_handlePaint);
+		canvas.drawCircle((int) touchX + px, (int) touchY + py, handleRadius,
+				handlePaint);
 
 		canvas.save();
 	}
@@ -129,26 +129,26 @@ public class JoystickView extends View {
 		if (actionType == MotionEvent.ACTION_MOVE) {
 			int px = getMeasuredWidth() / 2;
 			int py = getMeasuredHeight() / 2;
-			int radius = Math.min(px, py) - _handleInnerBoundaries;
+			int radius = Math.min(px, py) - handleInnerBoundaries;
 
-			_touchX = (event.getX() - px);
-			_touchX = Math.max(Math.min(_touchX, radius), -radius);
+			touchX = (event.getX() - px);
+			touchX = Math.max(Math.min(touchX, radius), -radius);
 
-			_touchY = (event.getY() - py);
-			_touchY = Math.max(Math.min(_touchY, radius), -radius);
+			touchY = (event.getY() - py);
+			touchY = Math.max(Math.min(touchY, radius), -radius);
 
 			// Coordinates
-			Log.d(TAG, "X:" + _touchX + "|Y:" + _touchY);
+			Log.d(TAG, "X:" + touchX + "|Y:" + touchY);
 
 			// Pressure
-			if (_listener != null) {
-				_listener.OnMoved((int) (_touchX / radius * _sensitivity), (int) (_touchY  / radius * _sensitivity));
+			if (listener != null) {
+				listener.OnMoved((int) (touchX / radius * sensitivity), (int) (touchY  / radius * sensitivity));
 			}
 
 			invalidate();
 		} else if (actionType == MotionEvent.ACTION_UP) {
 			returnHandleToCenter();
-			Log.d(TAG, "X:" + _touchX + "|Y:" + _touchY);
+			Log.d(TAG, "X:" + touchX + "|Y:" + touchY);
 		}
 		return true;
 	}
@@ -157,22 +157,22 @@ public class JoystickView extends View {
 
 		Handler handler = new Handler();
 		int numberOfFrames = 5;
-		final double intervalsX = (0 - _touchX) / numberOfFrames;
-		final double intervalsY = (0 - _touchY) / numberOfFrames;
+		final double intervalsX = (0 - touchX) / numberOfFrames;
+		final double intervalsY = (0 - touchY) / numberOfFrames;
 
 		for (int i = 0; i < numberOfFrames; i++) {
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					_touchX += intervalsX;
-					_touchY += intervalsY;
+					touchX += intervalsX;
+					touchY += intervalsY;
 					invalidate();
 				}
 			}, i * 40);
 		}
 
-		if (_listener != null) {
-			_listener.OnReleased();
+		if (listener != null) {
+			listener.OnReleased();
 		}
 	}
 }

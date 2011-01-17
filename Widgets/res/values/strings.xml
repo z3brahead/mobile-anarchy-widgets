@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="sortablelist">Sortable ListView</string>
     <string name="app_name">MobileAnarchy Widgets</string>
 
     <!-- Main menu resources  -->
@@ -8,6 +9,7 @@
     <string name="dockpanel_horizontal">DockPanel - Vertical</string>
     <string name="dockpanel_vertical">DockPanel - Horizontal</string>
     <string name="joystick">Soft-Joystick</string>
+    <string name="tileslayout">TilesLayout</string>
 
 	<!-- ThreasholdEditText strings -->
 	<string name="ThresholdTextChangedEventValue">&quot;ThresholdTextChanged&quot; event value</string>
