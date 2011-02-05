@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.R;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -90,6 +91,8 @@ public class TilesLayout extends FrameLayout {
 				TilePosition newTilePisition = positions.get(i);
 				SingleTileLayout tile = new SingleTileLayout(getContext());
 				tile.setBackgroundResource(R.drawable.edit_text);
+				//tile.setBackgroundColor(Color.GRAY);
+				
 				FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
 						(int)newTilePisition.getWidth(), 
 						(int)newTilePisition.getHeight(), 
@@ -104,10 +107,10 @@ public class TilesLayout extends FrameLayout {
 			}
 		}
 		// There is a bug in the animation-set, so we'll not animate
-		//animateChange(positions);
+		animateChange(positions);
 
 		// Regular repositioning (no animation)
-		processChange(positions);
+		//processChange(positions);
 	}
 
 
@@ -158,6 +161,7 @@ public class TilesLayout extends FrameLayout {
 		
 		for (int i = 0; i < tiles.size(); i++) {
 			AnimationSet scaleAndMove = new AnimationSet(true);
+			scaleAndMove.setFillAfter(true);
 
 			final SingleTileLayout currentTile = tiles.get(i);
 			TilePosition currentPosition = currentTile.getPosition(); 
@@ -177,20 +181,20 @@ public class TilesLayout extends FrameLayout {
 			if (!targetPosition.equals(currentPosition)) {
 				float toXDelta = 0, toYDelta = 0;
 				if (currentPosition != null) {
+					// Calculate new position
 					toXDelta = targetPosition.getX() - currentPosition.getX();
 					toYDelta = targetPosition.getY() - currentPosition.getY();
-					Log.d(TAG, "From = " + currentPosition + ", To = " + targetPosition);
-					Log.d(TAG, "toXDelta = " + toXDelta + ", toYDelta = " + toYDelta);
+					
+					// Factor in the scaling animation
+					toXDelta = toXDelta / (targetPosition.getWidth() / currentPosition.getWidth());
+					toYDelta = toYDelta / (targetPosition.getHeight() / currentPosition.getHeight());
 				}
-
-				scaleAndMove.setStartOffset(0);
 				
 				// Move
 				TranslateAnimation moveAnimation = new TranslateAnimation(0, toXDelta, 0, toYDelta);
 				moveAnimation.setDuration(animatedTransitionDuration);
-				//moveAnimation.setFillAfter(true);
 				moveAnimation.setStartOffset(0);
-				//moveAnimation.setStartOffset(animatedTransitionDuration);
+				moveAnimation.setFillAfter(true);
 				moveAnimation.setInterpolator(decelerateInterpolator);
 				scaleAndMove.addAnimation(moveAnimation);
 				
@@ -213,6 +217,11 @@ public class TilesLayout extends FrameLayout {
 								(int)targetPosition.getY(), 0, 0);
 						
 						currentTile.setLayoutParams(lp);
+						
+						// The following null animation just gets rid of screen flicker
+						animation = new TranslateAnimation(0.0f, 0.0f, 0.0f, 0.0f);
+						animation.setDuration(1);
+						currentTile.startAnimation(animation);
 					}
 				});
 				
@@ -227,9 +236,8 @@ public class TilesLayout extends FrameLayout {
 								Animation.ABSOLUTE, 0);
 					
 					scaleAnimation.setDuration(animatedTransitionDuration);
-					//scaleAnimation.setStartOffset(animatedTransitionDuration);
 					scaleAnimation.setStartOffset(0);
-					//scaleAnimation.setFillAfter(true);
+					scaleAnimation.setFillAfter(true);
 					scaleAndMove.addAnimation(scaleAnimation);
 				}
 				
@@ -242,6 +250,7 @@ public class TilesLayout extends FrameLayout {
 		
 		if (animationSet.getAnimations().size() > 0) {
 			Log.d(TAG, "Starting animation");
+			animationSet.setFillAfter(true);
 			animationSet.start();
 		}
 	}
