@@ -5,12 +5,11 @@ import java.util.List;
 
 import android.R;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.animation.AccelerateInterpolator;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -30,7 +29,7 @@ public class TilesLayout extends FrameLayout {
 	private int animatedTransitionDuration;
 	private List<SingleTileLayout> tiles;
 	private TilesLayoutPreset preset;
-	private Handler handler;
+	private int tileBackgroundResourceId;
 	
 	// =========================================
 	// Constructors
@@ -48,7 +47,7 @@ public class TilesLayout extends FrameLayout {
 
 	
 	// =========================================
-	// Public Methods
+	// Public Properties
 	// =========================================
 
 	public void setPreset(TilesLayoutPreset preset) {
@@ -61,14 +60,54 @@ public class TilesLayout extends FrameLayout {
 		}
 	}
 	
+	public TilesLayoutPreset getPreset() {
+		return this.preset;
+	}
+	
+	public int getAnimatedTransitionDuration() {
+		return animatedTransitionDuration;
+	}
+
+	public void setAnimatedTransitionDuration(int animatedTransitionDuration) {
+		this.animatedTransitionDuration = animatedTransitionDuration;
+	}
+
+	public int getTileBackgroundResourceId() {
+		return tileBackgroundResourceId;
+	}
+
+	public void setTileBackgroundResourceId(int tileBackgroundResourceId) {
+		this.tileBackgroundResourceId = tileBackgroundResourceId;
+	}
+
+	// =========================================
+	// Public Methods
+	// =========================================
+
+	public void addView(View view) {
+		for	(int i = 0; i < tiles.size(); i++) {
+			if (tiles.get(i).getChildCount() == 0) {
+				tiles.get(i).addView(view);
+				return;
+			}
+		}
+		// No available space for the new view... 
+		// TODO: Take the tile with the smallest time stamp and place the new view in it
+	}
+
+	public void clearView(int tileId) {
+		if (tiles.size() < tileId) {
+			tiles.get(tileId).removeAllViews();
+		}
+	}
 	
 	// =========================================
 	// Private Methods
 	// =========================================
 
 	private void Init(AttributeSet attrs) {
-		animatedTransitionDuration = 2000;
-		handler = new Handler();
+		animatedTransitionDuration = 1000;
+		tileBackgroundResourceId = R.drawable.edit_text;
 		tiles = new ArrayList<SingleTileLayout>();
 	}
 	
@@ -81,24 +120,23 @@ public class TilesLayout extends FrameLayout {
 		if (extraViews > 0) {
 			// Remove the extra views
 			while(tiles.size() - positions.size() > 0) {
-				int lastViewPisition = tiles.size() - 1;
-				removeView(tiles.get(lastViewPisition));
-				tiles.remove(lastViewPisition);	
+				int lastViewPosition = tiles.size() - 1;
+				removeView(tiles.get(lastViewPosition));
+				tiles.remove(lastViewPosition);	
 			}
 		} else {
 			// Add the extra views
 			for (int i = tiles.size(); i< positions.size(); i++) {
-				TilePosition newTilePisition = positions.get(i);
+				TilePosition newTilePosition = positions.get(i);
 				SingleTileLayout tile = new SingleTileLayout(getContext());
-				tile.setBackgroundResource(R.drawable.edit_text);
-				//tile.setBackgroundColor(Color.GRAY);
+				tile.setBackgroundResource(tileBackgroundResourceId);
 				
 				FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-						(int)newTilePisition.getWidth(), 
-						(int)newTilePisition.getHeight(), 
+						(int)newTilePosition.getWidth(), 
+						(int)newTilePosition.getHeight(), 
 						Gravity.TOP + Gravity.LEFT);
-				lp.setMargins((int)newTilePisition.getX(), 
-						(int)newTilePisition.getY(), 0, 0);
+				lp.setMargins((int)newTilePosition.getX(), 
+						(int)newTilePosition.getY(), 0, 0);
 				
 				tile.setLayoutParams(lp);
 				
@@ -137,6 +175,7 @@ public class TilesLayout extends FrameLayout {
 	}
 
 
+	@SuppressWarnings("unused")
 	private void processChange(ArrayList<TilePosition> positions) {
 		for (int i = 0; i < tiles.size(); i++) {
 			final SingleTileLayout currentTile = tiles.get(i);

@@ -19,6 +19,7 @@ public class MainActivity extends Activity {
 		openActivity(R.id.ButtonJoystick, JoystickActivity.class);
 		openActivity(R.id.ButtonTilesLayout, TilesLayoutActivity.class);
 		openActivity(R.id.ButtonSortableList, SortableListActivity.class);
+		openActivity(R.id.ButtonDragAndDrop, DragAndDropActivity.class);
 	}
 	
 	private void openActivity(int buttonId, final Class<?> activityClass) {

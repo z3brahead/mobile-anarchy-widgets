@@ -10,6 +10,7 @@
     <string name="dockpanel_vertical">DockPanel - Horizontal</string>
     <string name="joystick">Soft-Joystick</string>
     <string name="tileslayout">TilesLayout</string>
+    <string name="draganddrop">Drag and Drop</string>
 
 	<!-- ThreasholdEditText strings -->
 	<string name="ThresholdTextChangedEventValue">&quot;ThresholdTextChanged&quot; event value</string>
