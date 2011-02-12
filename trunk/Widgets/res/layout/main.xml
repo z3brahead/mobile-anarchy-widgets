@@ -12,6 +12,7 @@
 		<Button android:id="@+id/ButtonJoystick" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/joystick"></Button>
 		<Button android:id="@+id/ButtonTilesLayout" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/tileslayout"></Button>
 		<Button android:id="@+id/ButtonSortableList" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/sortablelist"></Button>
+		<Button android:id="@+id/ButtonDragAndDrop" android:layout_width="fill_parent" android:layout_height="wrap_content" android:text="@string/draganddrop"></Button>
 
 	</LinearLayout>
 

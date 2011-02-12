@@ -17,9 +17,17 @@ import android.widget.FrameLayout;
 
 public class TilesLayoutActivity extends Activity {
 
+	// =========================================
+	// Private Members
+	// =========================================
+
 	private TilesLayout tileLayout;
 	private Handler handler;
-	
+
+	// =========================================
+	// UI Events
+	// =========================================
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,6 +49,9 @@ public class TilesLayoutActivity extends Activity {
 	
 	}
 
+	// =========================================
+	// Input Events
+	// =========================================
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
