@@ -1,7 +1,6 @@
 package com.MobileAnarchy.Android.Widgets.DragAndDrop;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.TableLayout.LayoutParams;

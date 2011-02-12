@@ -1,6 +1,5 @@
 package com.MobileAnarchy.Android.Widgets.DragAndDrop;
 
-import android.util.Log;
 import android.view.View;
 
 public class DropZone {

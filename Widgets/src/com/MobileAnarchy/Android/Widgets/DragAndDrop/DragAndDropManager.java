@@ -3,11 +3,9 @@ package com.MobileAnarchy.Android.Widgets.DragAndDrop;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
-import android.widget.TextView;
 
 public class DragAndDropManager {
 

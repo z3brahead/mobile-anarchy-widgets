@@ -2,15 +2,12 @@ package com.MobileAnarchy.Android.Widgets.DragAndDrop;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 public class DragSurface extends FrameLayout {
 
-	private static final String TAG = "DragSurface";
-	
 	private float draggedViewHalfHeight;
 	private float draggedViewHalfWidth;
 	private int framesCount;
