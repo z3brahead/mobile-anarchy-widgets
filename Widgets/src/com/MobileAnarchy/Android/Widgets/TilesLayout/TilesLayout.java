@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.R;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -84,7 +85,7 @@ public class TilesLayout extends FrameLayout {
 	// Public Methods
 	// =========================================
 
-	public void addView(View view) {
+	public void addContent(View view) {
 		for	(int i = 0; i < tiles.size(); i++) {
 			if (tiles.get(i).getChildCount() == 0) {
 				tiles.get(i).addView(view);
@@ -94,7 +95,7 @@ public class TilesLayout extends FrameLayout {
 		// No available space for the new view... 
 		// TODO: Take the tile with the smallest time stamp and place the new view in it
 	}
-
+	
 	public void clearView(int tileId) {
 		if (tiles.size() < tileId) {
 			tiles.get(tileId).removeAllViews();
@@ -106,7 +107,7 @@ public class TilesLayout extends FrameLayout {
 	// =========================================
 
 	private void Init(AttributeSet attrs) {
-		animatedTransitionDuration = 1000;
+		animatedTransitionDuration = 750;
 		tileBackgroundResourceId = R.drawable.edit_text;
 		tiles = new ArrayList<SingleTileLayout>();
 	}
