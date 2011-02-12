@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:ma="http://com.MobileAnarchy.Android.Widgets"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
 
-	<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="10dip">
-		<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingRight="10px" android:text="@string/UserInput"></TextView>
-		<com.MobileAnarchy.Android.Widgets.ThresholdEditText.ThresholdEditText 
-											android:layout_height="wrap_content" 
-											android:layout_width="fill_parent" 
-											android:id="@+id/EditTextInput" 
-											android:lines="1" 
-											ma:threshold="500"
-											ma:disableThresholdOnEmptyInput="true" />
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_margin="10dip">
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:paddingRight="10px"
+			android:text="@string/UserInput"></TextView>
+		<com.MobileAnarchy.Android.Widgets.ThresholdEditText.ThresholdEditText
+			android:layout_height="wrap_content" android:layout_width="fill_parent"
+			android:id="@+id/EditTextInput" android:lines="1" ma:threshold="500"
+			ma:disableThresholdOnEmptyInput="true" />
 	</LinearLayout>
 
-	<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="10dip" android:orientation="vertical">
-		<TextView android:layout_height="wrap_content" android:paddingRight="10px" android:text="@string/StandardTextChangedEvent" android:layout_width="fill_parent"></TextView>
-		<TextView android:layout_height="wrap_content" android:id="@+id/TextViewStandardTextChange" android:layout_width="fill_parent" android:textStyle="bold"></TextView>
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_margin="10dip"
+		android:orientation="vertical">
+		<TextView android:layout_height="wrap_content"
+			android:paddingRight="10px" android:text="@string/StandardTextChangedEvent"
+			android:layout_width="fill_parent"></TextView>
+		<TextView android:layout_height="wrap_content"
+			android:id="@+id/TextViewStandardTextChange" android:layout_width="fill_parent"
+			android:textStyle="bold"></TextView>
 	</LinearLayout>
 
-	<LinearLayout android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_margin="10dip" android:orientation="vertical">
-		<TextView android:layout_height="wrap_content" android:paddingRight="10px" android:layout_width="fill_parent" android:text="@string/ThresholdTextChangedEventValue"></TextView>
-		<TextView android:layout_height="wrap_content" android:id="@+id/TextViewThreasholdTextChange" android:layout_width="fill_parent" android:textStyle="bold"></TextView>
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_margin="10dip"
+		android:orientation="vertical">
+		<TextView android:layout_height="wrap_content"
+			android:paddingRight="10px" android:layout_width="fill_parent"
+			android:text="@string/ThresholdTextChangedEventValue"></TextView>
+		<TextView android:layout_height="wrap_content"
+			android:id="@+id/TextViewThreasholdTextChange" android:layout_width="fill_parent"
+			android:textStyle="bold"></TextView>
 	</LinearLayout>
 
 </LinearLayout>
