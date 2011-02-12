@@ -1,0 +1,6 @@
+#labels Featured
+== TilesLayout Widget ==
+
+This view is actually a new layout mechanism. It allows you to split the screen into predefined regions or "tiles" and switch between those presets at runtime with an animated effect.
+
+<wiki:video url="http://www.youtube.com/watch?v=E5PkV3FOcIg"/>
