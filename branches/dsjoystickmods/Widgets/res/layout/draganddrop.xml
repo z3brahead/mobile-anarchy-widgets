@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent" android:layout_width="fill_parent">
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/TextViewDraggable1"
+		android:text="Drag Me" android:padding="20dip" android:background="#555555"
+		android:layout_margin="15dip"></TextView>
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/TextViewDraggable2"
+		android:text="Drag Me Too" android:padding="20dip" android:background="#555555"
+		android:layout_below="@+id/TextViewDraggable1" android:layout_margin="30dip"></TextView>
+	<FrameLayout android:id="@+id/FrameLayoutDropZone1"
+		android:background="#999999" android:layout_width="75dip"
+		android:layout_height="75dip" android:layout_alignParentRight="true"
+		android:layout_margin="10dip"></FrameLayout>
+	<FrameLayout android:id="@+id/FrameLayoutDropZone2"
+		android:background="#999999" android:layout_width="95dip"
+		android:layout_height="55dip" android:layout_alignParentRight="true"
+		android:layout_alignParentBottom="true" android:layout_margin="10dip"></FrameLayout>
+
+	<com.MobileAnarchy.Android.Widgets.DragAndDrop.DragSurface
+		android:id="@+id/dragsurface" android:layout_height="fill_parent"
+		android:layout_width="fill_parent" />
+
+</RelativeLayout>

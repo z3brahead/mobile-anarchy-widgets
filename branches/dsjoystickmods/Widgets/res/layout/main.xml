@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="vertical"
+		android:gravity="center" android:padding="20dip">
+
+		<TextView android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:text="@string/select_widget"
+			android:textSize="20dip" android:typeface="monospace"
+			android:layout_marginBottom="10dip"></TextView>
+		<Button android:id="@+id/ButtonThreasholdEditText"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:text="@string/threasholdedittext"></Button>
+		<Button android:id="@+id/ButtonDockPanelHorizontal"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:text="@string/dockpanel_horizontal"></Button>
+		<Button android:id="@+id/ButtonDockPanelVertical"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:text="@string/dockpanel_vertical"></Button>
+		<Button android:id="@+id/ButtonJoystick" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="@string/joystick"></Button>
+		<Button android:id="@+id/ButtonTilesLayout"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:text="@string/tileslayout"></Button>
+		<Button android:id="@+id/ButtonSortableList"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:text="@string/sortablelist"></Button>
+		<Button android:id="@+id/ButtonDragAndDrop"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:text="@string/draganddrop"></Button>
+
+	</LinearLayout>
+
+</ScrollView>

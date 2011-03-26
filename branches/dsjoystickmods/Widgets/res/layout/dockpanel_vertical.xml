@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:ma="http://com.MobileAnarchy.Android.Widgets"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:background="#333">
+
+	<LinearLayout android:id="@+id/LinearLayout"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:orientation="vertical" android:gravity="center">
+		<!-- Activity Content -->
+	</LinearLayout>
+
+	<com.MobileAnarchy.Android.Widgets.DockPanel.DockPanel
+		android:layout_width="wrap_content" android:layout_height="fill_parent"
+		android:layout_gravity="right" ma:dockPosition="right"
+		ma:handleButtonDrawableResourceId="@drawable/right_dock_handle"
+		ma:contentLayoutId="@layout/dockpanel_vertical_content"
+		ma:animationDuration="1000" />
+
+	<com.MobileAnarchy.Android.Widgets.DockPanel.DockPanel
+		android:layout_width="wrap_content" android:layout_height="fill_parent"
+		android:layout_gravity="left" ma:dockPosition="left"
+		ma:contentLayoutId="@layout/dockpanel_vertical_content"
+		ma:handleButtonDrawableResourceId="@drawable/left_dock_handle" />
+
+</FrameLayout>
