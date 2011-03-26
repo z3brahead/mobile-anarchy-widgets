@@ -34,9 +34,14 @@ public class JoystickActivity extends Activity {
 
 		@Override
 		public void OnReleased() {
+			txtX.setText("released");
+			txtY.setText("released");
+		}
+		
+		public void OnReturnedToCenter() {
 			txtX.setText("stopped");
 			txtY.setText("stopped");
-		}
+		};
 	}; 
 
 }

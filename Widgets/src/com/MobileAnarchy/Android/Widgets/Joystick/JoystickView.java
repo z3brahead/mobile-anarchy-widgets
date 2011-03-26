@@ -40,8 +40,11 @@ public class JoystickView extends View {
 	public final static int CONSTRAIN_CIRCLE = 1;
 	private int movementConstraint;
 	private float movementRange;
-	private float movementRangeH;
 
+	public final static int COORDINATE_CARTESIAN = 0;		//Regular cartesian coordinates
+	public final static int COORDINATE_DIFFERENTIAL = 1;	//Uses polar rotation of 45 degrees to calc differential drive paramaters
+	private int userCoordinateSystem;
+	
 	//Records touch pressure for click handling
 	private float touchPressure;
 	private boolean clicked;
@@ -63,11 +66,14 @@ public class JoystickView extends View {
 	private int dx, dy;
 
 	//Cartesian coordinates of last touch point - joystick center is (0,0)
-	private int cartX, cartY;	//Can be commented out if optimization is needed
+	private int cartX, cartY;
 	
 	//Polar coordinates of the touch point from joystick center
 	private double radial;
-	private float angle; 			//(can be commented out if optimization is needed)
+	private double angle;
+	
+	//User coordinates of last touch point
+	private int userX, userY;
 
 	// =========================================
 	// Constructors
@@ -119,10 +125,22 @@ public class JoystickView extends View {
 		
 		setMovementRange(10);
 		setMoveResolution(1.0f);
-		setClickThreshold(0.9f);
+		setClickThreshold(0.4f);
 		setYAxisInverted(true);
+		setUserCoordinateSystem(COORDINATE_CARTESIAN);
 	}
 
+	public void setUserCoordinateSystem(int userCoordinateSystem) {
+		if (userCoordinateSystem < COORDINATE_CARTESIAN || movementConstraint > COORDINATE_DIFFERENTIAL)
+			Log.e(TAG, "invalid value for userCoordinateSystem");
+		else
+			this.userCoordinateSystem = userCoordinateSystem;
+	}
+	
+	public int getUserCoordinateSystem() {
+		return userCoordinateSystem;
+	}
+	
 	public void setMovementConstraint(int movementConstraint) {
 		if (movementConstraint < CONSTRAIN_BOX || movementConstraint > CONSTRAIN_CIRCLE)
 			Log.e(TAG, "invalid value for movementConstraint");
@@ -159,7 +177,6 @@ public class JoystickView extends View {
 	
 	public void setMovementRange(float movementRange) {
 		this.movementRange = movementRange;
-		this.movementRangeH = movementRange / 2;
 	}
 	
 	public float getMovementRange() {
@@ -253,7 +270,7 @@ public class JoystickView extends View {
 			canvas.drawLine(px, py, handleX, handleY, dbgPaint2);
 			
 			canvas.drawText(String.format("(%d,%d)", cartX, cartY), handleX-20, handleY-7, dbgPaint2);
-			canvas.drawText("("+ String.format("%.0f, %.1f", radial, angle) + (char) 0x00B0 + ")", handleX-20, handleY+15, dbgPaint2);
+			canvas.drawText("("+ String.format("%.0f, %.1f", radial, angle * 57.2957795) + (char) 0x00B0 + ")", handleX-20, handleY+15, dbgPaint2);
 		}
 
 //		Log.d(TAG, String.format("touch(%f,%f)", touchX, touchY));
@@ -306,14 +323,7 @@ public class JoystickView extends View {
 		else
 			constrainBox();
 
-		cartX = toUserCoordinates(touchX);
-		cartY = toUserCoordinates(touchY);
-		if ( !yAxisInverted )
-			cartY  *= -1;
-		
-		//Other calcs which aren't absolutely necessary 
-		radial = Math.sqrt((cartX*cartX) + (cartY*cartY));
-		angle = (int)(Math.atan2(cartY, cartX) * 57.2957795);
+		calcUserCoordinates();
 
 		if (moveListener != null) {
 			boolean rx = Math.abs(touchX - reportX) >= moveResolution;
@@ -322,16 +332,37 @@ public class JoystickView extends View {
 				this.reportX = touchX;
 				this.reportY = touchY;
 				
-//				Log.d(TAG, String.format("moveListener.OnMoved(%d,%d)", (int)cartX, (int)cartY));
-				moveListener.OnMoved(cartX, cartY);
+//				Log.d(TAG, String.format("moveListener.OnMoved(%d,%d)", (int)userX, (int)userY));
+				moveListener.OnMoved(userX, userY);
 			}
 		}
 	}
-	
-	private int toUserCoordinates(float viewCoordinate) {
-		return (int)(viewCoordinate / radius * movementRange);
-	}
 
+	private void calcUserCoordinates() {
+		//First convert to cartesian coordinates
+		cartX = (int)(touchX / radius * movementRange);
+		cartY = (int)(touchY / radius * movementRange);
+		
+		radial = Math.sqrt((cartX*cartX) + (cartY*cartY));
+		angle = Math.atan2(cartY, cartX);
+		
+		//Invert Y axis if requested
+		if ( !yAxisInverted )
+			cartY  *= -1;
+		
+		if ( userCoordinateSystem == COORDINATE_CARTESIAN ) {
+			userX = cartX;
+			userY = cartY;
+		}
+		else if ( userCoordinateSystem == COORDINATE_DIFFERENTIAL ) {
+			userX = cartY + cartX / 4;
+			userY = cartY - cartX / 4;
+//			userX = (int)(Math.cos( angle+45 ) * radial);
+//			userY = (int)(Math.sin( angle+45 ) * radial);
+		}
+		
+	}
+	
 	//Simple pressure click
 	private void reportOnPressure() {
 //		Log.d(TAG, String.format("touchPressure=%.2f", this.touchPressure));
@@ -355,11 +386,12 @@ public class JoystickView extends View {
 	private void returnHandleToCenter() {
 
 		Handler handler = new Handler();
-		int numberOfFrames = 5;
+		final int numberOfFrames = 5;
 		final double intervalsX = (0 - touchX) / numberOfFrames;
 		final double intervalsY = (0 - touchY) / numberOfFrames;
 
 		for (int i = 0; i < numberOfFrames; i++) {
+			final int j = i;
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -368,6 +400,10 @@ public class JoystickView extends View {
 					
 					reportOnMoved();
 					invalidate();
+					
+					if (moveListener != null && j == numberOfFrames - 1) {
+						moveListener.OnReturnedToCenter();
+					}
 				}
 			}, i * 40);
 		}
