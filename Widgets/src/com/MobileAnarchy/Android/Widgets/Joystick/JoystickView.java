@@ -357,8 +357,16 @@ public class JoystickView extends View {
 		else if ( userCoordinateSystem == COORDINATE_DIFFERENTIAL ) {
 			userX = cartY + cartX / 4;
 			userY = cartY - cartX / 4;
-//			userX = (int)(Math.cos( angle+45 ) * radial);
-//			userY = (int)(Math.sin( angle+45 ) * radial);
+			
+			if ( userX < -movementRange )
+				userX = (int)-movementRange;
+			if ( userX > movementRange )
+				userX = (int)movementRange;
+
+			if ( userY < -movementRange )
+				userY = (int)-movementRange;
+			if ( userY > movementRange )
+				userY = (int)movementRange;
 		}
 		
 	}
