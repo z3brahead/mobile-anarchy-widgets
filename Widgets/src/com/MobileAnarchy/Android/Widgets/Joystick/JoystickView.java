@@ -12,21 +12,26 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class JoystickView extends View {
+	public static final int INVALID_POINTER_ID = -1;
+	
 	// =========================================
 	// Private Members
 	// =========================================
 	private final boolean D = false;
-	private final String TAG = "JoystickView";
+	String TAG = "JoystickView";
 	
 	private Paint dbgPaint1;
 	private Paint dbgPaint2;
 	
-	private Paint circlePaint;
+	private Paint bgPaint;
 	private Paint handlePaint;
+	
 	private int innerPadding;
-	private int radius;
+	private int bgRadius;
 	private int handleRadius;
+	private int movementRadius;
 	private int handleInnerBoundaries;
+	
 	private JoystickMovedListener moveListener;
 	private JoystickClickedListener clickListener;
 
@@ -51,6 +56,7 @@ public class JoystickView extends View {
 	private float clickThreshold;
 	
 	//Last touch point in view coordinates
+	private int pointerId = INVALID_POINTER_ID;
 	private float touchX, touchY;
 	
 	//Last reported position in view coordinates (allows different reporting sensitivities)
@@ -60,10 +66,10 @@ public class JoystickView extends View {
 	private float handleX, handleY;
 	
 	//Center of the view in view coordinates
-	private int px, py;
+	private int cX, cY;
 
 	//Size of the view in view coordinates
-	private int dx, dy;
+	private int dimX, dimY;
 
 	//Cartesian coordinates of last touch point - joystick center is (0,0)
 	private int cartX, cartY;
@@ -74,6 +80,10 @@ public class JoystickView extends View {
 	
 	//User coordinates of last touch point
 	private int userX, userY;
+
+	//Offset co-ordinates (used when touch events are received from parent's coordinate origin)
+	private int offsetX;
+	private int offsetY;
 
 	// =========================================
 	// Constructors
@@ -111,10 +121,10 @@ public class JoystickView extends View {
 		dbgPaint2.setStrokeWidth(1);
 		dbgPaint2.setStyle(Paint.Style.STROKE);
 		
-		circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		circlePaint.setColor(Color.GRAY);
-		circlePaint.setStrokeWidth(1);
-		circlePaint.setStyle(Paint.Style.FILL_AND_STROKE);
+		bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		bgPaint.setColor(Color.GRAY);
+		bgPaint.setStrokeWidth(1);
+		bgPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
 		handlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		handlePaint.setColor(Color.DKGRAY);
@@ -212,18 +222,25 @@ public class JoystickView extends View {
 		// Here we make sure that we have a perfect circle
 		int measuredWidth = measure(widthMeasureSpec);
 		int measuredHeight = measure(heightMeasureSpec);
-		int d = Math.min(measuredWidth, measuredHeight);
+		setMeasuredDimension(measuredWidth, measuredHeight);
+	}
 
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+
+		int d = Math.min(getMeasuredWidth(), getMeasuredHeight());
+
+		dimX = d;
+		dimY = d;
+
+		cX = d / 2;
+		cY = d / 2;
+		
+		bgRadius = dimX/2 - innerPadding;
 		handleRadius = (int)(d * 0.25);
 		handleInnerBoundaries = handleRadius;
-		
-		px = d / 2;
-		py = d / 2;
-		dx = d;
-		dy = d;
-		radius = Math.min(px, py) - handleInnerBoundaries;
-
-		setMeasuredDimension(d, d);
+		movementRadius = Math.min(cX, cY) - handleInnerBoundaries;
 	}
 
 	private int measure(int measureSpec) {
@@ -244,45 +261,44 @@ public class JoystickView extends View {
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		int px = getMeasuredWidth() / 2;
-		int py = getMeasuredHeight() / 2;
-		int radius = Math.min(px, py);
-
+		canvas.save();
 		// Draw the background
-		canvas.drawCircle(px, py, radius - innerPadding, circlePaint);
+		canvas.drawCircle(cX, cY, bgRadius, bgPaint);
 
 		// Draw the handle
-		handleX = touchX + px;
-		handleY = touchY + py;
+		handleX = touchX + cX;
+		handleY = touchY + cY;
 		canvas.drawCircle(handleX, handleY, handleRadius, handlePaint);
 
 		if (D) {
+			canvas.drawRect(1, 1, getMeasuredWidth()-1, getMeasuredHeight()-1, dbgPaint1);
+			
 			canvas.drawCircle(handleX, handleY, 3, dbgPaint1);
 			
 			if ( movementConstraint == CONSTRAIN_CIRCLE ) {
-				canvas.drawCircle(px, py, this.radius, dbgPaint1);
+				canvas.drawCircle(cX, cY, this.movementRadius, dbgPaint1);
 			}
 			else {
-				canvas.drawRect(px-handleRadius, py-handleRadius, px+handleRadius, py+handleRadius, dbgPaint1);
+				canvas.drawRect(cX-movementRadius, cY-movementRadius, cX+movementRadius, cY+movementRadius, dbgPaint1);
 			}
 			
 			//Origin to touch point
-			canvas.drawLine(px, py, handleX, handleY, dbgPaint2);
+			canvas.drawLine(cX, cY, handleX, handleY, dbgPaint2);
 			
-			canvas.drawText(String.format("(%d,%d)", cartX, cartY), handleX-20, handleY-7, dbgPaint2);
-			canvas.drawText("("+ String.format("%.0f, %.1f", radial, angle * 57.2957795) + (char) 0x00B0 + ")", handleX-20, handleY+15, dbgPaint2);
+			int baseY = (int) (touchY < 0 ? cY + handleRadius : cY - handleRadius);
+			canvas.drawText(String.format("%s (%.0f,%.0f)", TAG, touchX, touchY), handleX-20, baseY-7, dbgPaint2);
+			canvas.drawText("("+ String.format("%.0f, %.1f", radial, angle * 57.2957795) + (char) 0x00B0 + ")", handleX-20, baseY+15, dbgPaint2);
 		}
 
 //		Log.d(TAG, String.format("touch(%f,%f)", touchX, touchY));
 //		Log.d(TAG, String.format("onDraw(%.1f,%.1f)\n\n", handleX, handleY));
-		canvas.save();
+		canvas.restore();
 	}
 
 	// Constrain touch within a box
-	@SuppressWarnings("unused")
 	private void constrainBox() {
-		touchX = Math.max(Math.min(touchX, radius), -radius);
-		touchY = Math.max(Math.min(touchY, radius), -radius);
+		touchX = Math.max(Math.min(touchX, movementRadius), -movementRadius);
+		touchY = Math.max(Math.min(touchY, movementRadius), -movementRadius);
 	}
 
 	// Constrain touch within a circle
@@ -290,32 +306,111 @@ public class JoystickView extends View {
 		float diffX = touchX;
 		float diffY = touchY;
 		double radial = Math.sqrt((diffX*diffX) + (diffY*diffY));
-		if ( radial > radius ) {
-			touchX = (int)((diffX / radial) * radius);
-			touchY = (int)((diffY / radial) * radius);
+		if ( radial > movementRadius ) {
+			touchX = (int)((diffX / radial) * movementRadius);
+			touchY = (int)((diffY / radial) * movementRadius);
 		}
 	}
 	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		int actionType = event.getAction();
-		if (actionType == MotionEvent.ACTION_MOVE) {
-			// Translate touch position to center of view
-			touchX = (event.getX() - px);
-			touchY = (event.getY() - py);
+	public void setPointerId(int id) {
+		this.pointerId = id;
+	}
+	
+	public int getPointerId() {
+		return pointerId;
+	}
 
+	@Override
+	public boolean onTouchEvent(MotionEvent ev) {
+	    final int action = ev.getAction();
+		switch (action & MotionEvent.ACTION_MASK) {
+		    case MotionEvent.ACTION_MOVE: {
+	    		return processMoveEvent(ev);
+		    }	    
+		    case MotionEvent.ACTION_CANCEL: 
+		    case MotionEvent.ACTION_UP: {
+		    	if ( pointerId != INVALID_POINTER_ID ) {
+			    	Log.d(TAG, "ACTION_UP");
+			    	returnHandleToCenter();
+		        	setPointerId(INVALID_POINTER_ID);
+		    	}
+		        break;
+		    }
+		    case MotionEvent.ACTION_POINTER_UP: {
+		    	if ( pointerId != INVALID_POINTER_ID ) {
+			        final int pointerIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+			        final int pointerId = ev.getPointerId(pointerIndex);
+			        if ( pointerId == this.pointerId ) {
+			        	Log.d(TAG, "ACTION_POINTER_UP: " + pointerId);
+			        	returnHandleToCenter();
+			        	setPointerId(INVALID_POINTER_ID);
+			    		return true;
+			        }
+		    	}
+		        break;
+		    }
+		    case MotionEvent.ACTION_DOWN: {
+		    	if ( pointerId == INVALID_POINTER_ID ) {
+		    		int x = (int) ev.getX();
+		    		if ( x >= offsetX && x < offsetX + dimX ) {
+			        	setPointerId(ev.getPointerId(0));
+			        	Log.d(TAG, "ACTION_DOWN: " + getPointerId());
+			    		return true;
+		    		}
+		    	}
+		        break;
+		    }
+		    case MotionEvent.ACTION_POINTER_DOWN: {
+		    	if ( pointerId == INVALID_POINTER_ID ) {
+			        final int pointerIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+			        final int pointerId = ev.getPointerId(pointerIndex);
+		    		int x = (int) ev.getX(pointerId);
+		    		if ( x >= getLeft() && x < getRight() ) {
+			        	Log.d(TAG, "ACTION_POINTER_DOWN: " + pointerId);
+			        	setPointerId(pointerId);
+			    		return true;
+		    		}
+		    	}
+		        break;
+		    }
+	    }
+		return false;
+	}
+	
+	private boolean processMoveEvent(MotionEvent ev) {
+		if ( pointerId != INVALID_POINTER_ID ) {
+			final int pointerIndex = ev.findPointerIndex(pointerId);
+			
+			// Translate touch position to center of view
+			float x = ev.getX(pointerIndex);
+			touchX = x - cX - offsetX;
+			float y = ev.getY(pointerIndex);
+			touchY = y - cY - offsetY;
+
+        	Log.d(TAG, String.format("ACTION_MOVE: (%03.0f, %03.0f) => (%03.0f, %03.0f)", x, y, touchX, touchY));
+        	
 			reportOnMoved();
 			invalidate();
 			
-			touchPressure = event.getPressure();
+			touchPressure = ev.getPressure(pointerIndex);
 			reportOnPressure();
-		} 
-		else if (actionType == MotionEvent.ACTION_UP) {
-			returnHandleToCenter();
-			//Log.d(TAG, "X:" + touchX + "|Y:" + touchY);
+			
+			return true;
 		}
-		return true;
+		return false;
 	}
+
+//	@Override
+//	public boolean onTouchEvent(MotionEvent ev) {
+//		int actionType = event.getAction();
+//		if (actionType == MotionEvent.ACTION_MOVE) {
+//			processMoveEvent(ev);
+//		} 
+//		else if (actionType == MotionEvent.ACTION_UP) {
+//			returnHandleToCenter();
+//		}
+//		return true;
+//	}
 
 	private void reportOnMoved() {
 		if ( movementConstraint == CONSTRAIN_CIRCLE )
@@ -340,8 +435,8 @@ public class JoystickView extends View {
 
 	private void calcUserCoordinates() {
 		//First convert to cartesian coordinates
-		cartX = (int)(touchX / radius * movementRange);
-		cartY = (int)(touchY / radius * movementRange);
+		cartX = (int)(touchX / movementRadius * movementRange);
+		cartY = (int)(touchY / movementRadius * movementRange);
 		
 		radial = Math.sqrt((cartX*cartX) + (cartY*cartY));
 		angle = Math.atan2(cartY, cartX);
@@ -419,5 +514,10 @@ public class JoystickView extends View {
 		if (moveListener != null) {
 			moveListener.OnReleased();
 		}
+	}
+
+	public void setTouchOffset(int x, int y) {
+		offsetX = x;
+		offsetY = y;
 	}
 }
