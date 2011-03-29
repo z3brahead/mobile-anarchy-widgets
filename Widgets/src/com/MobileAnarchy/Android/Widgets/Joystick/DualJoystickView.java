@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 public class DualJoystickView extends LinearLayout {
+	@SuppressWarnings("unused")
 	private static final String TAG = DualJoystickView.class.getSimpleName();
 	
 	private final boolean D = false;
@@ -82,14 +83,46 @@ public class DualJoystickView extends LinearLayout {
 		stickR.setTouchOffset(stickR.getLeft(), stickR.getTop());
 	}
 	
-	public void setLeftJostickMovedListener(JoystickMovedListener listener) {
-		stickL.setOnJostickMovedListener(listener);
+	public void setAutoReturnToCenter(boolean left, boolean right) {
+		stickL.setAutoReturnToCenter(left);
+		stickR.setAutoReturnToCenter(right);
 	}
 	
-	public void setRightJostickMovedListener(JoystickMovedListener listener) {
-		stickR.setOnJostickMovedListener(listener);
+	public void setOnJostickMovedListener(JoystickMovedListener left, JoystickMovedListener right) {
+		stickL.setOnJostickMovedListener(left);
+		stickR.setOnJostickMovedListener(right);
+	}
+	
+	public void setOnJostickClickedListener(JoystickClickedListener left, JoystickClickedListener right) {
+		stickL.setOnJostickClickedListener(left);
+		stickR.setOnJostickClickedListener(right);
+	}
+	
+	public void setYAxisInverted(boolean leftYAxisInverted, boolean rightYAxisInverted) {
+		stickL.setYAxisInverted(leftYAxisInverted);
+		stickL.setYAxisInverted(rightYAxisInverted);
 	}
 
+	public void setMovementConstraint(int movementConstraint) {
+		stickL.setMovementConstraint(movementConstraint);
+		stickR.setMovementConstraint(movementConstraint);
+	}
+
+	public void setMovementRange(float movementRangeLeft, float movementRangeRight) {
+		stickL.setMovementRange(movementRangeLeft);
+		stickR.setMovementRange(movementRangeRight);
+	}
+
+	public void setMoveResolution(float leftMoveResolution, float rightMoveResolution) {
+		stickL.setMoveResolution(leftMoveResolution);
+		stickR.setMoveResolution(rightMoveResolution);
+	}
+
+	public void setUserCoordinateSystem(int leftCoordinateSystem, int rightCoordinateSystem) {
+		stickL.setUserCoordinateSystem(leftCoordinateSystem);
+		stickR.setUserCoordinateSystem(rightCoordinateSystem);
+	}
+	
 	@Override
 	protected void dispatchDraw(Canvas canvas) {
 		super.dispatchDraw(canvas);
