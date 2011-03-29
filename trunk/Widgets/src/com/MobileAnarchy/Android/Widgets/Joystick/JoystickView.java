@@ -39,6 +39,7 @@ public class JoystickView extends View {
 	private float moveResolution;
 
 	private boolean yAxisInverted;
+	private boolean autoReturnToCenter;
 	
 	//Max range of movement in user coordinate system
 	public final static int CONSTRAIN_BOX = 0;
@@ -138,8 +139,17 @@ public class JoystickView extends View {
 		setClickThreshold(0.4f);
 		setYAxisInverted(true);
 		setUserCoordinateSystem(COORDINATE_CARTESIAN);
+		setAutoReturnToCenter(true);
 	}
 
+	public void setAutoReturnToCenter(boolean autoReturnToCenter) {
+		this.autoReturnToCenter = autoReturnToCenter;
+	}
+	
+	public boolean isAutoReturnToCenter() {
+		return autoReturnToCenter;
+	}
+	
 	public void setUserCoordinateSystem(int userCoordinateSystem) {
 		if (userCoordinateSystem < COORDINATE_CARTESIAN || movementConstraint > COORDINATE_DIFFERENTIAL)
 			Log.e(TAG, "invalid value for userCoordinateSystem");
@@ -330,7 +340,7 @@ public class JoystickView extends View {
 		    case MotionEvent.ACTION_CANCEL: 
 		    case MotionEvent.ACTION_UP: {
 		    	if ( pointerId != INVALID_POINTER_ID ) {
-			    	Log.d(TAG, "ACTION_UP");
+//			    	Log.d(TAG, "ACTION_UP");
 			    	returnHandleToCenter();
 		        	setPointerId(INVALID_POINTER_ID);
 		    	}
@@ -341,7 +351,7 @@ public class JoystickView extends View {
 			        final int pointerIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 			        final int pointerId = ev.getPointerId(pointerIndex);
 			        if ( pointerId == this.pointerId ) {
-			        	Log.d(TAG, "ACTION_POINTER_UP: " + pointerId);
+//			        	Log.d(TAG, "ACTION_POINTER_UP: " + pointerId);
 			        	returnHandleToCenter();
 			        	setPointerId(INVALID_POINTER_ID);
 			    		return true;
@@ -354,7 +364,7 @@ public class JoystickView extends View {
 		    		int x = (int) ev.getX();
 		    		if ( x >= offsetX && x < offsetX + dimX ) {
 			        	setPointerId(ev.getPointerId(0));
-			        	Log.d(TAG, "ACTION_DOWN: " + getPointerId());
+//			        	Log.d(TAG, "ACTION_DOWN: " + getPointerId());
 			    		return true;
 		    		}
 		    	}
@@ -365,8 +375,8 @@ public class JoystickView extends View {
 			        final int pointerIndex = (action & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
 			        final int pointerId = ev.getPointerId(pointerIndex);
 		    		int x = (int) ev.getX(pointerId);
-		    		if ( x >= getLeft() && x < getRight() ) {
-			        	Log.d(TAG, "ACTION_POINTER_DOWN: " + pointerId);
+		    		if ( x >= offsetX && x < offsetX + dimX ) {
+//			        	Log.d(TAG, "ACTION_POINTER_DOWN: " + pointerId);
 			        	setPointerId(pointerId);
 			    		return true;
 		    		}
@@ -387,7 +397,7 @@ public class JoystickView extends View {
 			float y = ev.getY(pointerIndex);
 			touchY = y - cY - offsetY;
 
-        	Log.d(TAG, String.format("ACTION_MOVE: (%03.0f, %03.0f) => (%03.0f, %03.0f)", x, y, touchX, touchY));
+//        	Log.d(TAG, String.format("ACTION_MOVE: (%03.0f, %03.0f) => (%03.0f, %03.0f)", x, y, touchX, touchY));
         	
 			reportOnMoved();
 			invalidate();
@@ -399,18 +409,6 @@ public class JoystickView extends View {
 		}
 		return false;
 	}
-
-//	@Override
-//	public boolean onTouchEvent(MotionEvent ev) {
-//		int actionType = event.getAction();
-//		if (actionType == MotionEvent.ACTION_MOVE) {
-//			processMoveEvent(ev);
-//		} 
-//		else if (actionType == MotionEvent.ACTION_UP) {
-//			returnHandleToCenter();
-//		}
-//		return true;
-//	}
 
 	private void reportOnMoved() {
 		if ( movementConstraint == CONSTRAIN_CIRCLE )
@@ -487,32 +485,32 @@ public class JoystickView extends View {
 	}
 
 	private void returnHandleToCenter() {
+		if ( autoReturnToCenter ) {
+			final int numberOfFrames = 5;
+			final double intervalsX = (0 - touchX) / numberOfFrames;
+			final double intervalsY = (0 - touchY) / numberOfFrames;
 
-		Handler handler = new Handler();
-		final int numberOfFrames = 5;
-		final double intervalsX = (0 - touchX) / numberOfFrames;
-		final double intervalsY = (0 - touchY) / numberOfFrames;
-
-		for (int i = 0; i < numberOfFrames; i++) {
-			final int j = i;
-			handler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					touchX += intervalsX;
-					touchY += intervalsY;
-					
-					reportOnMoved();
-					invalidate();
-					
-					if (moveListener != null && j == numberOfFrames - 1) {
-						moveListener.OnReturnedToCenter();
+			for (int i = 0; i < numberOfFrames; i++) {
+				final int j = i;
+				postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						touchX += intervalsX;
+						touchY += intervalsY;
+						
+						reportOnMoved();
+						invalidate();
+						
+						if (moveListener != null && j == numberOfFrames - 1) {
+							moveListener.OnReturnedToCenter();
+						}
 					}
-				}
-			}, i * 40);
-		}
+				}, i * 40);
+			}
 
-		if (moveListener != null) {
-			moveListener.OnReleased();
+			if (moveListener != null) {
+				moveListener.OnReleased();
+			}
 		}
 	}
 
