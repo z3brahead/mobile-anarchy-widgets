@@ -17,6 +17,7 @@
 		<activity android:name=".TilesLayoutActivity" />
 		<activity android:name=".SortableListActivity" />
 		<activity android:name=".DragAndDropActivity" />
+		<activity android:name=".DualJoystickActivity" android:screenOrientation="landscape" />
 	</application>
 	<uses-sdk android:minSdkVersion="4" />
 </manifest> 

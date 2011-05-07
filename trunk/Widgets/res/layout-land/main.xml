@@ -23,9 +23,9 @@
 
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal">
-			<Button android:id="@+id/ButtonJoystick" android:layout_width="fill_parent"
-				android:layout_height="wrap_content" android:text="@string/joystick"
-				android:layout_weight="0.5"></Button>
+			<Button android:id="@+id/ButtonTilesLayout"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:text="@string/tileslayout" android:layout_weight="0.5"></Button>
 			<Button android:id="@+id/ButtonDockPanelVertical"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:text="@string/dockpanel_vertical" android:layout_weight="0.5"></Button>
@@ -33,16 +33,19 @@
 
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal">
-			<Button android:id="@+id/ButtonTilesLayout"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:text="@string/tileslayout" android:layout_weight="0.5"></Button>
-			<Button android:id="@+id/ButtonSortableList"
-				android:layout_width="fill_parent" android:layout_height="wrap_content"
-				android:text="@string/sortablelist" android:layout_weight="0.5"></Button>
+			<Button android:id="@+id/ButtonJoystick" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:text="@string/joystick"
+				android:layout_weight="0.5"></Button>
+			<Button android:id="@+id/ButtonDualJoystick" android:layout_width="fill_parent"
+				android:layout_height="wrap_content" android:text="@string/dualjoystick"
+				android:layout_weight="0.5"></Button>
 		</LinearLayout>
 
 		<LinearLayout android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:orientation="horizontal">
+			<Button android:id="@+id/ButtonSortableList"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:text="@string/sortablelist" android:layout_weight="0.5"></Button>
 			<Button android:id="@+id/ButtonDragAndDrop"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:text="@string/draganddrop" android:layout_weight="0.5"></Button>

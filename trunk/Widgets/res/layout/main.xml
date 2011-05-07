@@ -21,6 +21,8 @@
 			android:text="@string/dockpanel_vertical"></Button>
 		<Button android:id="@+id/ButtonJoystick" android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:text="@string/joystick"></Button>
+		<Button android:id="@+id/ButtonDualJoystick" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:text="@string/dualjoystick"></Button>
 		<Button android:id="@+id/ButtonTilesLayout"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:text="@string/tileslayout"></Button>
