@@ -17,6 +17,7 @@ public class MainActivity extends Activity {
 		openActivity(R.id.ButtonDockPanelHorizontal, DockPanelHorizontalActivity.class);
 		openActivity(R.id.ButtonDockPanelVertical, DockPanelVerticalActivity.class);
 		openActivity(R.id.ButtonJoystick, JoystickActivity.class);
+		openActivity(R.id.ButtonDualJoystick, DualJoystickActivity.class);
 		openActivity(R.id.ButtonTilesLayout, TilesLayoutActivity.class);
 		openActivity(R.id.ButtonSortableList, SortableListActivity.class);
 		openActivity(R.id.ButtonDragAndDrop, DragAndDropActivity.class);

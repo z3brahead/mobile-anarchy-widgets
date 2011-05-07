@@ -9,6 +9,7 @@
 	<string name="dockpanel_horizontal">DockPanel - Vertical</string>
 	<string name="dockpanel_vertical">DockPanel - Horizontal</string>
 	<string name="joystick">Soft-Joystick</string>
+	<string name="dualjoystick">Dual Soft-Joystick</string>
 	<string name="tileslayout">TilesLayout</string>
 	<string name="draganddrop">Drag and Drop</string>
 
